@@ -1,13 +1,13 @@
 from django.db import models
 #abstract base user is the base of the f=django standard user models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser,UserManager as AbstractUserManager
 #adding permission to spectific users using permission mixins
 from django.contrib.auth.models import PermissionsMixin
 #class that django uses by default
 from django.contrib.auth.models import BaseUserManager
 
 # Create your models here.
-class UserProfileManager(BaseUserManager):
+class UserManager(AbstractUserManager):
     """Helps Django work with our custom user model"""
     def create_user(self,email,name,password=None):
 
@@ -33,12 +33,7 @@ class UserProfileManager(BaseUserManager):
         return user
 
 
-
-
-
-
-
-class UserProfile(AbstractBaseUser,PermissionsMixin):
+class UserProfile(AbstractBaseUser):
     """Represents user profile inside our system"""#docstring
 
     email = models.EmailField(max_length=255,unique=True)
@@ -47,7 +42,7 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     is_staff = models.BooleanField( default=False)
 
     #object manager to substitute custom models
-    objects = UserProfileManager()
+    objects = UserManager()
 
     USERNAME_FIELD ='email'
     REQUIRED_FIELD =['name']
