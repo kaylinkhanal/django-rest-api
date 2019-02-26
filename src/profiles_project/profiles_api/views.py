@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from . import serializers
 from rest_framework import status
 from . import models
+from . import permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
 # Create your views here.
 
 class HelloApiView(APIView):
@@ -105,3 +108,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating profiles """
     serializer_class = serializers.UserProfileSerializer
     queryset=models.User.objects.all()
+    authentication_classes=(TokenAuthentication,)
+    permission_classes=(permissions.UpdateOwnProfile,)
+    filter_backends=(filters.SearchFilter,)
+    search_fields =('username','email')
