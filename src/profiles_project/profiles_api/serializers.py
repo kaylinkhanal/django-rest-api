@@ -15,13 +15,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields =('id', 'email', 'username', 'password')
         extra_kwargs = {'password':{'write_only':True}}
 
-def create(self, validated_data):
-    """Create and return a new user"""
-    user= models.User(
-        email=validated_data['email'],
-        name=validated_data['username']
-    )
-    user.set_password(validated_data['password'])
-    user.save()
+    def create(self, validated_data):
+        """Create and return a new user"""
+        user= models.User(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
 
-    return user
+        return user
+
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    """A serializer for profile feed items"""
+
+    class Meta:
+        model=models.ProfileFeedItem
+        fields= ('id','user_profile','status_text','created_on',)
+        extra_kwargs={'user_profile':{'read_only':True}}
